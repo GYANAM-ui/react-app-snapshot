@@ -1,108 +1,55 @@
-## Create-React-App-Lambda
+# Snap Shot [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=See%20this%20react%20example&url=https://yog9.github.io/SnapShot/&hashtags=react,context-api,freecodecamp,developers)
 
-This project is a reference demo showing you how to use [Create React App v3](https://github.com/facebookincubator/create-react-app) and [netlify-lambda v1](https://github.com/netlify/netlify-lambda) together in a [Netlify Dev](https://www.netlify.com/docs/cli/?utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex#netlify-dev-beta) workflow. You can clone this and immediately be productive with a React app with serverless Netlify Functions in the same repo. Alternatively you can deploy straight to Netlify with this one-click Deploy:
+[![Build Status](https://travis-ci.org/Yog9/SnapShot.svg?branch=master)](https://travis-ci.org/Yog9/SnapShot)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![HitCount](http://hits.dwyl.com/Yog9/SnapShot.svg)](http://hits.dwyl.com/Yog9/SnapShot)
 
+[Demo of Snap Shot](https://yog9.github.io/SnapShot/)
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg?utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify/create-react-app-lambda&utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex)
+![](/snapscout.png)
 
-> ⚠️NOTE: You may not need this project at all. [Netlify Dev](https://github.com/netlify/netlify-dev-plugin) works with `create-react-app` out of the box! Only use `netlify-lambda` if you need a build step for your functions, eg if you want to use Babel or TypeScript ([see its README for details](https://github.com/netlify/netlify-lambda/blob/master/README.md#netlify-lambda)).
+### Summary
 
-## Project Setup
+Snap Shot is a gallery created using React,React Hooks, React Router and Context API. The Routes were setup for four default pages and a search page. Also the images were displayed using the Flickr API and axios to fetch data.
 
-**Source**: The main addition to base Create-React-App is a new folder: `src/lambda`. This folder is specified and can be changed in the `package.json` script: `"build:lambda": "netlify-lambda build src/lambda"`.
+### Motivation
 
-**Dist**: Each JavaScript file in there will be built for Netlify Function deployment in `/built-lambda`, specified in [`netlify.toml`](https://www.netlify.com/docs/netlify-toml-reference/?utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex).
+The purpose of this project was to get familiar with React Hooks and Context API.
 
-As an example, we've included a small `src/lambda/hello.js` function, which will be deployed to `/.netlify/functions/hello`. We've also included an async lambda example using async/await syntax in `async-dadjoke.js`.
+### Getting Started
 
-## Video
+Click the demo link or clone/download the repository on your local machine.
+Create a config.js file in api folder inside src folders. In config.js file write
+`export const apiKey = "YOUR_FLIKR_API_KEY";`
 
-Learn how to set this up yourself (and why everything is the way it is) from scratch in a video: https://www.youtube.com/watch?v=3ldSM98nCHI
+##### Install dependencies
 
-## Babel/webpack compilation
+`yarn install`
 
-All functions (inside `src/lambda`) are compiled with webpack using Babel, so you can use modern JavaScript, import npm modules, etc., without any extra setup.
+##### Run Snap Shot from the root directory.
 
-## Local Development
+`yarn start`
 
-```bash
-## prep steps for first time users
-npm i -g netlify-cli # Make sure you have the [Netlify CLI](https://github.com/netlify/cli) installed
-git clone https://github.com/netlify/create-react-app-lambda ## clone this repo
-cd create-react-app-lambda ## change into this repo
-yarn # install all dependencies
+### Built With
 
-## done every time you start up this project
-ntl dev ## nice shortcut for `netlify dev`, starts up create-react-app AND a local Node.js server for your Netlify functions
-```
+- React js
+- React Router
+- React Hooks
+- Context API
+- Flickr API
 
-This fires up [Netlify Dev](https://www.netlify.com/docs/cli/?utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex#netlify-dev-beta), which:
+### Features
 
-- Detects that you are running a `create-react-app` project and runs the npm script that contains `react-scripts start`, which in this project is the `start` script
-- Detects that you use `netlify-lambda` as a [function builder](https://github.com/netlify/netlify-dev-plugin/#function-builders-function-builder-detection-and-relationship-with-netlify-lambda), and runs the npm script that contains `netlify-lambda build`, which in this project is the `build:lambda` script.
+**1. Responsive Design.**
 
-You can view the project locally via Netlify Dev, via `localhost:8888`.
+**2. Search functionality added to search photos from API.**
 
-Each function will be available at the same port as well:
+### Coming Soon
 
-- `http://localhost:8888/.netlify/functions/hello` and 
-- `http://localhost:8888/.netlify/functions/async-dadjoke`
+- [ ] Cypress E2E Tests
 
-## Deployment
+### Contributing
 
-During deployment, this project is configured, inside `netlify.toml` to run the build `command`: `yarn build`.
+Everyone is welcomed to contribute to this project. You can contribute either by submitting bugs or suggesting improvements by opening an issue on GitHub. Please see the [CONTRIBUTING](CONTRIBUTING.md) guidelines for more information.
 
-`yarn build` corresponds to the npm script `build`, which uses `npm-run-all` (aka `run-p`) to concurrently run `"build:app"` (aka `react-scripts build`) and `build:lambda` (aka `netlify-lambda build src/lambda`).
-
-## Typescript
-
-<details>
-  <summary>
-    <b id="typescript">Click for instructions</b>
-  </summary>
-
-You can use Typescript in both your frontend React code (with `react-scripts` v2.1+) and your serverless functions (with `netlify-lambda` v1.1+). Follow these instructions:
-
-1. `yarn add -D typescript @types/node @types/react @types/react-dom @babel/preset-typescript @types/aws-lambda`
-2. convert `src/lambda/hello.js` to `src/lambda/hello.ts`
-3. use types in your event handler:
-
-```ts
-import { Handler, Context, Callback, APIGatewayEvent } from 'aws-lambda'
-
-interface HelloResponse {
-  statusCode: number
-  body: string
-}
-
-const handler: Handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
-  const params = event.queryStringParameters
-  const response: HelloResponse = {
-    statusCode: 200,
-    body: JSON.stringify({
-      msg: `Hello world ${Math.floor(Math.random() * 10)}`,
-      params,
-    }),
-  }
-
-  callback(undefined, response)
-}
-
-export { handler }
-```
-
-rerun and see it work!
-
-You are free to set up your `tsconfig.json` and `tslint` as you see fit.
-
-</details>
-
-**If you want to try working in Typescript on the client and lambda side**: There are a bunch of small setup details to get right. Check https://github.com/sw-yx/create-react-app-lambda-typescript for a working starter.
-
-## Routing and authentication with Netlify Identity
-
-For a full demo of routing and authentication, check this branch: https://github.com/netlify/create-react-app-lambda/pull/18 This example will not be maintained but may be helpful.
-
-## Service Worker
-
-`create-react-app`'s default service worker (in `src/index.js`) does not work with lambda functions out of the box. It prevents calling the function and returns the app itself instead ([Read more](https://github.com/facebook/create-react-app/issues/2237#issuecomment-302693219)). To solve this you have to eject and enhance the service worker configuration in the webpack config. Whitelist the path of your lambda function and you are good to go.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

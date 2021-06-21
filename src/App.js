@@ -1,50 +1,60 @@
-import React, { Component } from "react"
-import logo from "./logo.svg"
-import "./App.css"
-
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { loading: false, msg: null }
-  }
-
-  handleClick = api => e => {
-    e.preventDefault()
-
-    this.setState({ loading: true })
-    fetch("/.netlify/functions/" + api)
-      .then(response => response.json())
-      .then(json => this.setState({ loading: false, msg: json.msg }))
-  }
-
-  render() {
-    const { loading, msg } = this.state
-
-    return (
-      <p>
-        <button onClick={this.handleClick("hello")}>{loading ? "Loading..." : "Call Lambda"}</button>
-        <button onClick={this.handleClick("async-dadjoke")}>{loading ? "Loading..." : "Call Async Lambda"}</button>
-        <br />
-        <span>{msg}</span>
-      </p>
-    )
-  }
-}
+import React, { Component } from "react";
+import PhotoContextProvider from "./context/PhotoContext";
+import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
+import Header from "./components/Header";
+import Item from "./components/Item";
+import Search from "./components/Search";
+import NotFound from "./components/NotFound";
 
 class App extends Component {
+  // Prevent page reload, clear input, set URL and push history on submit
+  handleSubmit = (e, history, searchInput) => {
+    e.preventDefault();
+    e.currentTarget.reset();
+    let url = `/search/${searchInput}`;
+    history.push(url);
+  };
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <LambdaDemo />
-        </header>
-      </div>
-    )
+      <PhotoContextProvider>
+        <HashRouter basename="/SnapScout">
+          <div className="container">
+            <Route
+              render={props => (
+                <Header
+                  handleSubmit={this.handleSubmit}
+                  history={props.history}
+                />
+              )}
+            />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={() => <Redirect to="/mountain" />}
+              />
+
+              <Route
+                path="/mountain"
+                render={() => <Item searchTerm="mountain" />}
+              />
+              <Route path="/beach" render={() => <Item searchTerm="beach" />} />
+              <Route path="/bird" render={() => <Item searchTerm="bird" />} />
+              <Route path="/food" render={() => <Item searchTerm="food" />} />
+              <Route
+                path="/search/:searchInput"
+                render={props => (
+                  <Search searchTerm={props.match.params.searchInput} />
+                )}
+              />
+              <Route component={NotFound} />
+            </Switch>
+          </div>
+        </HashRouter>
+      </PhotoContextProvider>
+    );
   }
 }
 
-export default App
+export default App;
